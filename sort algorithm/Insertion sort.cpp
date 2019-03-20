@@ -1,5 +1,6 @@
 // https://onlinejudge.u-aizu.ac.jp/courses/lesson/1/ALDS1/all/ALDS1_1_A
 
+#include <vector>
 template <typename T>
 void insertionSort(vector<T> a)
 {
