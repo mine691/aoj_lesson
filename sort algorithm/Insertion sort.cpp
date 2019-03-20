@@ -1,7 +1,7 @@
 template <typename T>
 void insertionSort(vector<T> a)
 {
-    print(a);
+    //print(a);
     int n = a.size();
     for (int i = 1; i < n; i++)
     {
@@ -13,6 +13,6 @@ void insertionSort(vector<T> a)
             j--;
         }
         a[j + 1] = v;
-        print(a);
+        //print(a);
     }
 }
