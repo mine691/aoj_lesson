@@ -2,20 +2,20 @@
 
 #include <vector>
 template <typename T>
-void insertionSort(vector<T> a)
+void insertionSort(vector<T> &A)
 {
-    //print(a);
-    int n = a.size();
+    print(A);
+    int n = A.size();
     for (int i = 1; i < n; i++)
     {
-        T v = a[i];
+        T v = A[i];
         int j = i - 1;
-        while (j >= 0 && a[j] > v)
+        while (j >= 0 && A[j] > v)
         {
-            a[j + 1] = a[j];
+            A[j + 1] = A[j];
             j--;
         }
-        a[j + 1] = v;
-        //print(a);
+        A[j + 1] = v;
+        print(A);
     }
 }
