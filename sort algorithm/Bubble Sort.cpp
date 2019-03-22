@@ -1,4 +1,5 @@
 //https://onlinejudge.u-aizu.ac.jp/courses/lesson/1/ALDS1/all/ALDS1_2_A
+//
 
 #include <vector>
 
