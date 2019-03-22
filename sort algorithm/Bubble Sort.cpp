@@ -22,3 +22,21 @@ void bubbleSort(vector<T> &A, int &cnt)
         }
     }
 }
+
+template <typename T>
+void BubbleSort(vector<T> &C, int &cnt)
+{
+    int n = C.size();
+    cnt = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = n - 2; j >= i; j--)
+        {
+            if (C[j] > C[j + 1])
+            {
+                swap(C[j], C[j + 1]);
+                cnt++;
+            }
+        }
+    }
+}
