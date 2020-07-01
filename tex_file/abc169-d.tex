@@ -1,0 +1,71 @@
+\documentclass[dvipdfmx,12pt]{beamer}% dvipdfmxしたい
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{ascmac}
+% pLaTeX文書; 文字コードはいつも通り
+\usepackage{bxdpx-beamer}% dvipdfmxなので必要
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usefonttheme{professionalfonts}
+% あとは欧文の場合と同じ
+\usetheme{Copenhagen}
+
+%
+\title{ABC169-D : Div Game 解説}
+\author{ホスフィン \\ twitter: @mine691}
+\date{\today}
+\begin{document}
+\maketitle
+%
+%
+\section{D - Div Game}
+\begin{frame}
+\begin{block}{問題文}
+正の整数 $ N $ が与えられます. $ N $ に対して, 以下の操作を繰り返し行うことを考えます.
+	\begin{itemize}
+		\item はじめに. 以下の条件を全て満たす正の整数 $ z $ を選ぶ
+		\begin{itemize}
+				\item ある素数 $ p $ と正の整数 $ e $ を用いて, $ z = p ^ e $ と表せる.
+				\item $ N $ が $ z $ で割り切れる.
+				\item 以前の操作で選んだどの整数とも異なる.
+		\end{itemize}
+		\item $ N $ を $ N / z $ に置き換える.
+	\end{itemize}
+最大で何回操作を行うことができるか求めてください.
+\end{block}
+\begin{exampleblock}{制約}
+	\begin{itemize}
+		\item 入力はすべて整数
+		\item $1 \leq N \leq 10 ^ {12}$
+	\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{ $N$ が素数冪のとき}
+	$ N = p ^ e $ なら, $ z =  p ^ 1, p ^ 2, p ^ 3 \cdots $ としていくのが最適 (冪の小さい順に貪欲)\\
+	$ \because ) $ 選ぶ冪を小さくすることで,操作回数が増やせることがある
+\end{exampleblock}
+
+$ N $ が素数冪でなくても, 素数毎に独立に考えることができる.\\
+\end{frame}
+
+\begin{frame}
+$ N $ を素因数分解してシミュレーション \\
+時間計算量は $ O ( \sqrt{N} ) $ \\
+
+\href{https://atcoder.jp/contests/abc169/submissions/13986174}{実装例}
+\end{frame}
+
+\begin{frame}{統計情報}
+人数 : 4591 / 6192 \\
+正解率 : 74.14％ \\
+平均ペナ : 1.13 \\
+ペナ率 : 46.50％ \\ 
+difficulty : 686 \\ 
+
+\end{frame}
+%
+%
+\end{document}
