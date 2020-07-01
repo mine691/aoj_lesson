@@ -1,0 +1,96 @@
+\documentclass[dvipdfmx,12pt]{beamer}% dvipdfmxしたい
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{ascmac}
+% pLaTeX文書; 文字コードはいつも通り
+\usepackage{bxdpx-beamer}% dvipdfmxなので必要
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usefonttheme{professionalfonts}
+% あとは欧文の場合と同じ
+\usetheme{Copenhagen}
+
+\title{ABC169-F : F - Knapsack for All Subsets 解説}
+\author{ホスフィン \\ twitter: @mine691}
+\date{\today}
+\begin{document}
+\maketitle
+
+\section{F - Knapsack for All Subsets}
+
+\begin{frame}
+\begin{block}{問題文}
+長さ $ N $ の正整数列 
+$A_1, A_2, \cdots, A_N $ と正の整数 $ S $ が与えられます.
+集合 $ \{1, 2, \cdots, N \} $ の空でない部分集合 $ T $ について,$ f(T) $ を以下のように定めます.\\
+
+\begin{itemize}
+\item $ T $ の空でない部分集合 $\{x_1, x_2, \cdots, x_k \}$ であって,$A_{x_1} + A_{x_2} + \dots + A_{x_k} = S$ をみたすものの個数
+\end{itemize}
+
+$ T $ として考えられる集合は $ 2^{N} - 1 $ 通りありますが,そのすべてに対する $f(T)$ の和を求めてください.
+\end{block}
+
+\begin{exampleblock}{制約}
+\begin{itemize}
+	\item 入力は全て整数である. 
+	\item $1 \leq N \leq 3000$
+	\item $1 \leq S \leq 3000$
+	\item $1 \leq A_{i} \leq 3000$
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+ところで部分和問題というものがある.
+
+\begin{alertblock}{部分和問題}
+$n$ 個の正の整数 $ a[0], a[1], \cdots ,a[n - 1] $ と正の整数 $ A $ が与えられる.
+これらの整数から何個かの整数を選んで総和が $ A $ になるようにすることが可能か判定せよ.
+可能ならば "YES" と出力し,不可能ならば "NO" と出力せよ.
+\end{alertblock}
+
+この問題はナップサック問題と似たように解ける.\\
+\[
+dp [i+1][j] = \left\{\begin{array}{l}
+dp [i][j - a[i]] \quad | dp[i][j] \ (j \geq a[i]) \\
+dp[i][j] \quad(j \geq a[i])
+\end{array}\right.
+\]
+\[
+dp[0][j]=\left\{\begin{array}{ll}
+\text { True } & (j = 0) \\
+\text { False } & (j \neq 0)
+\end{array}\right.
+\]
+\end{frame}
+
+\begin{frame}
+
+$ dp[i][j] $ を $ A_1, A_2, \cdots, A_i $ までで集合と作ったときに, 何個かの整数を選んで総和が $ j $ になるような場合の数と定義する. \\
+$ dp[i][j] $ は $ dp[i + 1][j + a[i]] \ (j + a[i] \leq S) $ と $ dp[i + 1][j] $ へ遷移する. \\
+$ dp[i + 1][j + a[i]] $ への遷移は, 「$ T $ に含まれていて, $ a[i] $ が和にも寄与している」の一通り \\
+$ dp[i + 1][j] $ への遷移は,「$ T $ に含まれているが,和には寄与していない」「$ T $ にも含まれていない」の二通り\\
+
+\end{frame}
+
+
+\begin{frame}
+詳しいことは \href{https://atcoder.jp/contests/abc169/submissions/13978080}{このコード}を見てくれ \\
+時間計算量 $ O(NS) $, 空間計算量 $ O(NS) $ でできる.\\
+
+ひとつ前見るタイプの dp なので in-place にやれば 空間計算量 $ O(S) $ でできる.
+
+\end{frame}
+
+\begin{frame}{統計情報}
+人数 : 818 / 1146 \\
+正解率 : 71.38％ \\
+平均ペナ : 0.86 \\
+ペナ率 : 45.20％ \\ 
+difficulty : 1601 \\ 
+
+\end{frame}
+
+\end{document}
