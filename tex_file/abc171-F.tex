@@ -1,0 +1,127 @@
+\documentclass[dvipdfmx,12pt]{beamer}% dvipdfmxしたい
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{ascmac}
+% pLaTeX文書; 文字コードはいつも通り
+\usepackage{bxdpx-beamer}% dvipdfmxなので必要
+\usepackage{hyperref} %リンクを有効にする
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usefonttheme{professionalfonts}
+% あとは欧文の場合と同じ
+\usetheme{Copenhagen}
+
+%
+\title{ABC171-F Strivore 解説}
+\author{@mine691}
+\date{\today}
+\begin{document}
+\maketitle
+%
+
+\section{問題概要}
+\begin{frame} % スライド1pごとに frame を作る
+\begin{block}{問題文}
+% ココに問題文を書く
+「好きな英小文字 $1$ 文字を好きな位置に挿入する」という操作を文字列 $S$ にちょうど $K$ 回繰り返してできる文字列は何通りあるでしょう？
+\end{block}
+
+\begin{exampleblock}{制約}
+% ココに制約を箇条書きで書く
+
+	\begin{itemize}
+		\item 入力はすべて整数
+		\item $1 \leq K \leq 10 ^ {6}$
+		\item $1 \leq | S |  \leq 10 ^ {6}$
+	\end{itemize}
+
+\end{exampleblock}
+\end{frame}
+
+\section{考察}
+\begin{frame}
+\begin{exampleblock}{具体例}
+	$ S = $  ab, $ K = 1 $  のとき \\
+	\begin{itemize}
+	\item *ab
+	\item a*b
+	\item ab*
+	\end{itemize}
+	のような形があって $ 76 $ 通り
+\end{exampleblock}
+
+\begin{alertblock}{注意}
+上の例で aab にする方法は $ 2 $ 通りある
+\begin{itemize}
+	\item 1文字目の前に a を挿入する
+	\item 2文字目の前に a を挿入する
+	\end{itemize}
+\end{alertblock}
+操作の手順や方法を考えずに解きたい！
+\end{frame}
+
+\begin{frame}
+\begin{alertblock}{問題文の言い換え}
+操作が終了した文字列を $ T $ としたとき \\
+\begin{center}
+「文字列 $ S $ を部分列として含む文字列 $ T $ は何通りあるか」\\
+ただし,$ |T| = |S| + K $ である
+\end{center}
+という問題に言い換えられる
+\end{alertblock}
+$S =$ ab, $K = $ 1 のとき \\
+aab は ab を部分列に持つ　\\
+以下では,$ N = |S|$ とする
+
+\end{frame}
+
+\begin{frame}
+ところで, 文字列$ T $ が文字列 $ S $ を部分列に持つことはどうやって判定できるだろうか\\
+$ \longrightarrow $ 先頭から貪欲に一致判定していく \\
+
+\begin{exampleblock}{貪欲の例}
+	$ T = $ aabcababcdf, $ S = $ abcd のとき,先頭から S  の文字があるかを見る 
+\end{exampleblock}
+
+この構造を見ると \\
+\begin{center}
+「文字列$ T $ が文字列 $ S $ を部分列に持つ」\\
+$ \Leftrightarrow $ \\
+「$ T = t_1 s_1 t_2 s_2 \cdots s_N t_{N+1} $ となる文字列 $ t_i (1 \leq i \leq N + 1) $ が存在して,文字列 $ t_i (1 \leq i \leq N)$ は文字 $ s_i $ を含まない」
+\end{center}
+である
+\end{frame}
+
+\begin{frame}
+\begin{block}{解くべき問題}
+$ S $ から $ K $ 回操作をして,$ T $ になったとする \\
+「$ T = t_1 s_1 t_2 s_2 \cdots s_N t_{N+1} $ となる文字列 $ t_i (1 \leq i \leq N + 1) $ が存在して,文字列 $ t_i (1 \leq i \leq N)$ は文字 $ s_i $ を含まない」となる $ T $ は何通りあるか
+\end{block}
+$ t_{N + 1} $ の文字数を $ j $ とすれば,重複組合せの考え方を用いて
+
+\begin{center}
+	$26^{j} \ 25^{K - j} \ \binom{K - j + N - 1}{N - 1}$
+\end{center}
+となり,最終的な答えはこれを $ 1 \leq j \leq K $ で足し上げる\\
+全体として $O(N + K)$ で解けた
+\end{frame}
+
+\begin{frame}
+\begin{alertblock}{Remark}
+	\begin{itemize}
+		\item 最後の式の導出は母関数を使ってもできる$ (1-25x)^{-N}(1-26x)^{-1} $ の $ x^K $ の係数が求めたいもの
+		\item 「dp[i][j] := i文字目まで決めて$S$のj文字目まで含まれる場合の数」から計算量を落としてもいい
+		\item 操作の完成形の場合の数は,「完成形の条件を見つける」「操作と完成形を一対一に対応させる」と上手くいきやすい
+		\item OEIS(オンライン整数列大辞典)にあるらしい
+	\end{itemize}
+\end{alertblock}
+
+\href{https://atcoder.jp/contests/abc171/submissions/14675270}{提出}
+
+\end{frame}
+
+%
+%
+\end{document}
