@@ -1,0 +1,102 @@
+\documentclass[dvipdfmx,12pt]{beamer}% dvipdfmxしたい
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{ascmac}
+% pLaTeX文書; 文字コードはいつも通り
+\usepackage{bxdpx-beamer}% dvipdfmxなので必要
+\usepackage{hyperref} %リンクを有効にする
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usefonttheme{professionalfonts}
+% あとは欧文の場合と同じ
+\usetheme{Copenhagen}
+
+%
+\title{PAST3-L 解説}
+\author{ホスフィン \\ twitter: @mine691}
+\date{\today}
+\begin{document}
+\maketitle
+%
+%
+\section{PAST3-L }
+\begin{frame}
+\begin{block}{問題文}
+高橋君のスーパーマーケットには陳列棚があります.\\
+この陳列棚には商品を並べられる列が $N$本あり,それぞれの列には 
+1, 2, $\cdots$, $N$ の番号がついています.\\
+列 $i$ には $K_i$ 個の商品が手前から奥へと一列に並べられており,手前から 
+$j$ 番目の商品の消費期限は $T_{i,j}$ です.
+
+ここで,全ての商品の消費期限は相異なることが保証されます.
+
+$M$ 人の客が順番にやってきます. 
+$i$ 番目にやってきた客は全ての列について現在の時点で手前から 
+$a_i$ 番目までにある商品を見た後,見た商品のうち最も消費期限の値が大きいものを選んで棚から取って購入します.
+
+それぞれの客について,購入した商品の消費期限の値を求めてください.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{alertblock}{制約}
+	\begin{itemize}
+		\item 入力はすべて整数
+		\item $1 \leq N \leq 10 ^ {5}$
+		\item $1 \leq M \leq \Sigma_{i = 1}^N K_i \leq 3 \times 10^5 $
+		\item $1 \leq T_{i,j} \leq 10 ^9$
+		\item $ T_{i,j} $ は全て異なる
+		\item $ \alert{1 \leq a_i \leq 2} $ (じゅうよう)
+	\end{itemize}
+\end{alertblock}
+\end{frame}
+\begin{frame}{解説}
+棚に陳列されている様子を思い浮かべると,棚にある商品の消費期限の最大値が欲しくなってきます\\
+つまり,区間 max と一点更新が欲しいです\\
+これはセグ木でできるので,シミュレーションをするだけで終わりです（えー！）\\
+$1 \leq a_i \leq 2 $ があるので,長さ$N$ のセグ木が 2 本あれば十分です（うれしい）
+\end{frame}
+
+\begin{frame}{セグ木とは？？？}
+セグメントツリーというデータ構造の略称 \\
+モノイドという代数構造を持った長さ $N$ の列について以下のことが高速にできる \\
+\begin{itemize}
+	\item 一点更新 $ O(log N) $
+	\item 区間クエリ $ O(log N)$
+\end{itemize}
+e.g. RMQ（Range Min Query）, RSQ（Range Sum Query） \\
+詳しくは「セグメント木　徹底解説」「セグメント木をソラで書きたい」で検索！\\
+
+\end{frame}
+
+\begin{frame}{解説・改}
+さっきの説明はかなり雑なので,ちゃんと書きます\\
+まず,一列目の商品の消費期限 $ T_{i,1} $ を $ (T_{i, 1}, i)$ の形でセグ木 seg1 に乗せる\\
+二項演算は $ \rm{}max \it ((a, i), (b, j)) = a, b$ のうち大きいほう \\
+単位元は $ (-1, -1) $ とか適当でいい\\
+同様に 二列目の商品の消費期限についての seg2 をつくる \\
+ここまでくれば,シミュレーションをするだけ\\
+\end{frame}
+
+
+\begin{frame}
+ここで \href{https://atcoder.jp/contests/past202005-open/submissions/14175896 \\}{セグ木解のコード} を見せる\\
+時間計算量 $ O(N + \Sigma K + N log N + M log N ) = O((N + M) log N)$ で解けた \\
+pair で持たずに,セグ木上の二分探索をしても （たぶん）OK
+\end{frame}
+
+
+\begin{frame}{そのセグ木,必要ですか？}
+じつはセグ木はいりません（えー！）\\
+set や priority\_queue （おすすめ） があれば列の最大値が取得できる \\
+同様にシミュレーションでできる （実装が少し面倒かも）\\
+\end{frame}
+
+\begin{frame}
+ここで \href{https://atcoder.jp/contests/past202005-open/submissions/14155701}{pq 解のコード}を見せる.\\
+\end{frame}
+%
+%
+\end{document}
