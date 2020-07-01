@@ -1,0 +1,107 @@
+\documentclass[dvipdfmx,12pt]{beamer}% dvipdfmxしたい
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{ascmac}
+% pLaTeX文書; 文字コードはいつも通り
+\usepackage{bxdpx-beamer}% dvipdfmxなので必要
+\usepackage{hyperref} %リンクを有効にする
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usefonttheme{professionalfonts}
+% あとは欧文の場合と同じ
+\usetheme{Copenhagen}
+
+%
+\title{ABC170-F 解説}
+\author{ホスフィン @mine691}
+\date{\today}
+\begin{document}
+\maketitle
+%
+
+\section{F問題}
+\begin{frame} % スライド1pごとに frame を作る
+\begin{block}{問題文}
+% ココに問題文を書く
+$ W \times H $ のグリッドが与えれられる.（移動不可能なマスもある）
+$ (x_1, y_1) $ から出発して, $ (x_2, y_2) $ に移動することを考える.
+このとき,コスト1で上下左右1方向に最大 $ K $マスまで移動できる.
+移動コストの最小値を求めよ.
+\end{block}
+
+
+\begin{exampleblock}{制約}
+% ココに制約を箇条書きで書く
+
+	\begin{itemize}
+		\item 入力はすべて整数
+		\item $ 1 \leq H, W, K \leq 10 ^ {6} $
+		\item $1 \leq H \times W \leq 10 ^ {6} $
+	\end{itemize}
+
+\end{exampleblock}
+
+\end{frame}
+
+\begin{frame}{簡単な考察}
+愚直にやってみると,$ O(HWK) $ かかりそうでダメ \\
+「進行方向を変えたとき」と「K以上進んだとき」でコストが増加する\\
+dist[x][y][direction] の形で(最短経路, 進んだ回数)を求めると良さそう （ダイクストラしたい気持ちが抑えきれない）\\
+\end{frame}
+
+\begin{frame} {解法例}
+\begin{itemize}
+	\item 拡張ダイクストラ  $ O(HW \log (HW)) $
+	\item 01-BFS  $ O(HW) $
+	\item 枝刈り(?) BFS  $ O(HW) $
+	\item noshi 式区間に辺を貼るテク  $ O(HW \log K) $
+	\item set で頑張るやつ  
+\end{itemize}
+今回は上３つを説明する.
+\end{frame}
+
+\begin{frame}{拡張ダイクストラとは？}
+正確には,「拡張（されたグラフ上で）ダイクストラ」のこと\\
+ダイクストラをするとき,最短経路と一緒に別の情報を持っておくことで,色々な量を一緒に求めることができる \\
+priority\_queue を使うためには,「優先度」がついたものでないといけない \\
+本問題では,\\
+\begin{center}
+（最短経路長, ある方向に何回連続で進んだか）
+\end{center}
+を優先度にする.
+\end{frame}
+
+\begin{frame}{拡張ダイクストラ解法}
+説明がめんどくさいから \href{https://atcoder.jp/contests/abc170/submissions/14452259}{コード} を見てくれ
+\end{frame}
+
+\begin{frame}{01-BFS解法}
+グリッド上で,辺のコストが 0 or 1 の場合,01-BFS というアルゴリズムが使える \\
+deque (両端キュー) を使うと $ O(HW) $ \\
+01-BFSについては「01-BFSのちょっと丁寧な解説」で検索！\\
+
+\href{https://atcoder.jp/contests/abc170/submissions/14447856}{コード}
+\end{frame}
+
+\begin{frame}{枝刈りBFS解法}
+実は,愚直でも工夫すれば通る\\
+$K$ 進むとき,\\
+\begin{itemize}
+	\item 自分より大きいコストがあれば無視して進む
+	\item 自分以下のコストが現れたら終わり
+\end{itemize}
+をすれば,各マスは高々2回 or 4回しか見ない
+
+全体として $ O(HW) $ でできる\\
+\href{https://atcoder.jp/contests/abc170/submissions/14447887}{コード}
+\end{frame}
+
+\begin{frame}{その他の解法}
+noshi 式区間に辺を貼るテク\\
+set で頑張るやつ : 未到達のマスを set で持つ.実装で破滅しがち.
+\end{frame}
+%
+%
+\end{document}
