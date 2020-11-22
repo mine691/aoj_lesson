@@ -1,0 +1,161 @@
+\documentclass[dvipdfmx,12pt]{beamer}% dvipdfmxしたい
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{ascmac}
+% pLaTeX文書; 文字コードはいつも通り
+\usepackage{bxdpx-beamer}% dvipdfmxなので必要
+\usepackage{hyperref} %リンクを有効にする
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usefonttheme{professionalfonts}
+% あとは欧文の場合と同じ
+\usetheme{Copenhagen}
+
+%
+\title{AtCoder Beginner Contest 172 - E - NEQ 解説}
+\author{@mine691 ホスフィン}
+\date{\today}
+\begin{document}
+\maketitle
+%
+\section{問題概要}
+\begin{frame} % スライド1pごとに frame を作る
+\begin{block}{問題文}
+% ココに問題文を書く
+$ 1 $ 以上 $ M $ 以下の整数からなる
+長さ $ N $ の数列 $ (A_i)_{i = 1, \cdots N}$ と $ (B_i)_{i = 1, \cdots N}$
+の組であって, 以下の条件を全て満たすものの個数を求めてください.
+\begin{enumerate}
+	\item $ 1 \leq i \leq N $ なる任意の $ i $ について $ A_i \neq B_i $
+	\item $ 1 \leq i < j \leq N $ なる任意の $ (i, j) $ について $ A_i \neq A_j $ かつ $ B_i \neq B_j $
+\end{enumerate} 
+\end{block}
+
+\begin{exampleblock}{制約}
+% ココに制約を箇条書きで書く
+	\begin{itemize}
+		\item 入力はすべて整数
+		\item $1 \leq N \leq M \leq 5 \times 10 ^ {5}$
+	\end{itemize}
+
+\section{観察}
+\end{exampleblock}
+\end{frame}
+\begin{frame}
+\begin{exampleblock}{サンプル1}
+例えば, $ N = 2, M = 2$ (数列が長さ $ N $ かつ $ 1 $ 以上 $ M $ 以下)
+\begin{itemize}
+	\item $ A_1 = 1, A_2 = 2$
+	\item $ B_1 = 2, B_2 = 1$
+\end{itemize}
+と
+\begin{itemize}
+	\item $ A_1 = 2, A_2 = 1$
+	\item $ B_1 = 1, B_2 = 2$
+\end{itemize}
+の2通りがある.
+\end{exampleblock}
+なんとなく複雑そう……？\\
+一つ目の条件は「同じ項が一つもない」なので, 否定を取ると「同じ項が少なくとも一つ存在する」になる.
+\end{frame}
+
+\begin{frame}
+\begin{block}{問題文をもう少しフォーマルに言い換えてみる}
+\begin{center}
+$ U :=  \{(A_i, B_i)_{i = 1, \cdots N} \mid 1 \leq A_i, B_i \leq M \} $ \\
+\end{center}
+とする. $ X_k \subset U \ (1 \leq k \leq N) $ を\\
+\begin{center}
+$ X_k := \{(A_i, B_i)_{i = 1, \cdots N} \mid \ A_k \neq B_k \} $
+\end{center}
+で定義する. このとき\\
+\begin{center}
+$ \displaystyle \left| \bigcap_{k = 1}^N X_k \right| $ \\
+\end{center}
+を求めよ.
+\end{block} 
+\end{frame}
+
+\section{考察}
+\begin{frame}
+一般に,積集合の数え上げは条件が多くて大変になりやすい.\\
+特に, $ X_k $ の定義に否定が入っていて嫌な気持ちになる.\\
+補集合を取ってみると,ド・モルガンの法則から
+
+\begin{center}
+$ \displaystyle \left| \bigcap_{k = 1}^N X_k \right| = \left| U \right| - \left| \bigcup_{k = 1}^N X_k^c \right| $ \\
+\end{center}
+となる.ここで
+\begin{center}
+$ X_k^c = \{(A_i, B_i)_{i = 1, \cdots N} \mid \ A_k = B_k \} $
+\end{center}
+
+\end{frame}
+
+\begin{frame}{包除原理}
+\begin{block}{定理}
+以下では, $ [n] = \{ 1, \cdots n \} $ とする.
+有限集合族 $(A_i)_{i = 1\cdots n} $ について,
+\begin{center}
+$ \displaystyle \left|\bigcup_{i=1}^{n} A_{i}\right| =\sum_{k=1}^{n}(-1)^{k-1} \sum_{J \subseteq[n],|J|=k}\left|\bigcap_{j \in J} A_{j}\right| $
+\end{center}
+つまり\\
+$ \displaystyle |A_1\cup A_2\cup\cdots\cup A_n| $  \\
+$ \displaystyle =\sum_{i}\left|A_{i}\right|-\sum_{i<j}\left|A_{i} \cap A_{j}\right|+\cdots + (-1)^{n-1}\left|A_{1} \cap \cdots \cap A_{n}\right| $ \\
+が成り立つ.
+\end{block}
+\href{http://compro.tsutajiro.com/archive/181015_incexc.pdf}{tsutajさんのスライド}や\href{http://satanic0258.hatenablog.com/entry/2016/04/10/104524}{satanicさんの記事}が分かりやすい.
+\end{frame}
+
+\begin{frame}{包除原理}
+包除原理を今の場合に適用してみると
+\begin{center}
+$ \displaystyle \left|\bigcup_{i=1}^{N} X_i^c\right| =\sum_{k=1}^{N}(-1)^{k-1} \sum_{J \subseteq[N],|J|=k}\left|\bigcap_{j \in J} X_j^c \right| $
+\end{center}
+後半の和は,
+\begin{itemize}
+	\item $ N $ 個から $ k $ 個選んで
+	\item 各 $ X_j^c $ の 第 $ j $ 項目が何かを選び（二つの数列で共通している部分を決める）
+	\item 他を適当に選ぶ（二つの数列の決まってない $ N - k $ 箇所を決める）
+\end{itemize} 
+ような組合せなので,
+\begin{center}
+$ {_NC_k} \cdot {_MP_k} \cdot (_{M-k}P_{N-k})^2$
+\end{center}
+言葉だけだと分かりにくいので、数列をイメージしてほしい（は？）
+\end{frame}
+
+\begin{frame}
+\begin{center}
+$ U =  \{(A_i, B_i)_{i = 1, \cdots N} \mid 1 \leq A_i, B_i \leq M \} $ \\
+\end{center}
+の要素の個数については,あり得る数列の場合の数なので
+\begin{center}
+$ \displaystyle \left| U \right| = (_{M}P_{N})^2$
+\end{center}
+今までの議論をまとめると, 求める値は
+
+\begin{center}
+$ \displaystyle (_{M}P_{N})^2 - \sum_{k=1}^N (-1)^{k-1} \cdot {_NC_k} \cdot {_MP_k} \cdot (_{M-k}P_{N-k})^2 $ 
+$ = \displaystyle (_{M}P_{N})^2 -  {_MP_N} \cdot \sum_{k=1}^N (-1)^{k-1} \cdot {_NC_k} \cdot _{M-k}P_{N-k}$
+\end{center}
+となり, 色々頑張ると $O(M)$ で求まる.
+\end{frame}
+
+\begin{frame}{まとめなど}
+\begin{itemize}
+	\item 与えられた条件が複雑なときは補集合や余事象や否定を取ってみると上手くいくことがある.（andとorの入れ替え）
+	\item 和集合の数え上げは包除原理！（素振り）
+	\item 似たような例として完全順列があり, 3項間漸化式で求められたりする.（\href{https://twitter.com/gojira_kyopro/status/1276879162456698880?s=20}{gojiraさんのツイート}）
+\end{itemize}
+
+\href{https://atcoder.jp/contests/abc172/submissions/14888947}{提出コード}\\
+
+
+いたることろにハイパーリンクがあります.
+\end{frame}
+%
+%
+\end{document}
