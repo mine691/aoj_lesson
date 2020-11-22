@@ -1,0 +1,111 @@
+\documentclass[dvipdfmx,12pt]{beamer}% dvipdfmxしたい
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{ascmac}
+% pLaTeX文書; 文字コードはいつも通り
+\usepackage{bxdpx-beamer}% dvipdfmxなので必要
+\usepackage{hyperref} %リンクを有効にする
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usefonttheme{professionalfonts}
+% あとは欧文の場合と同じ
+\usetheme{Copenhagen}
+
+%
+\title{ABC174-F 解説}
+\author{@mine691}
+\date{\today}
+\begin{document}
+\maketitle
+%
+
+\section{問題概要}
+\begin{frame} % スライド1pごとに frame を作る
+\begin{block}{問題文の概略}
+% ココに問題文を書く
+長さ $ N $ の数列があり,$ i $ 番目の数は $ c_i $ です.\\
+以下のようなクエリが $ Q $ 個与えられます.\\
+\begin{itemize}
+	\item 第 $ l $ 項目から第 $ r $ 項目までの部分列にある種類数を計算する.
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{制約}
+% ココに制約を箇条書きで書く
+	\begin{itemize}
+		\item 入力はすべて整数
+		\item $1 \leq N, Q \leq 5 \times 10 ^ {5}$
+		\item \alert{$1 \leq c_i \leq N$}
+		\item $1 \leq l_i \leq r_i \leq N $
+	\end{itemize}
+\end{exampleblock}
+\href{https://atcoder.jp/contests/abc174/tasks/abc174_f}{問題URL}
+\end{frame}
+
+\section{観察}
+
+\begin{frame}
+\begin{exampleblock}{具体例}
+	例えば,\\
+	$ N = 4, Q = 1 $ \\
+	$ c = (1,2,1,3), q_1 = (1,3) $ \\
+	なら ,部分列は $ (1,2,1) $ なので種類数は 2 \\
+\end{exampleblock}
+$ N,Q $ が大きいので,データ構造やクエリ処理を工夫したい.
+
+\end{frame}
+
+\section{考察}
+
+\begin{frame}
+\begin{block}{典型考察}
+区間のオフラインクエリは,右端or左端でソートしてから処理するといい.
+\end{block}
+とりあえず,左端でソートをして考えてみる.\\
+ところで,数列の種類数はどのように決まっているのだろうか.
+\end{frame}
+
+\begin{frame}
+左からみて,初めて出てくる位置に印を付けてみる.\\
+\begin{center}
+\includegraphics[width=5cm]{abc174-f.png} \\
+本質の図
+\end{center}
+左端を一つ進めるごとに初めて出てくる位置が更新されていて,この印の個数の総和が種類数になるので,良い感じのデータ構造があればOK
+\end{frame}
+
+\section{解法}
+\begin{frame}
+\begin{block}{実装について}
+BIT でさっきの処理を行う.\\
+初めて出てくる位置の更新は,数ごとのpriority queue / queue があればできる.
+\end{block}
+
+\href{https://atcoder.jp/contests/abc174/submissions/15722462}{提出コード}\\
+この方針だと丁寧に書いて40行くらい（BITを除く）
+\end{frame}
+
+\begin{frame}
+\begin{exampleblock}{類題}
+\begin{itemize}
+	\item $ N = 26 $ で種類数クエリと更新クエリ（\href{https://codeforces.com/contest/1234/problem/D}{CR590-D}）
+	\item $ K $ 個の重複を許す種類数クエリ（オンライン）（\href{https://codeforces.com/problemset/problem/813/E}{ECR22-E}）
+\end{itemize}
+\end{exampleblock}
+
+\begin{alertblock}{その他}
+\begin{itemize}
+	\item 問題名  Range Set Query を言い換えて [区間 種類数 クエリ] と検索すると,良い感じの記事が出てくる
+	\item 制約が微妙にきつくて,定数倍で落ちたりする
+	\item 同じ数が端の区間を列挙して,(クエリ区間の長さ)$-$(そのクエリ区間を含むような区間の個数)が答え.これはBITを使った平面走査でできる.
+	\item 他にも Mo's algorithm でもできるが,TLが厳しめ
+\end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+%
+%
+\end{document}
