@@ -1,0 +1,86 @@
+\documentclass[dvipdfmx,12pt]{beamer}% dvipdfmxしたい
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{ascmac}
+% pLaTeX文書; 文字コードはいつも通り
+\usepackage{bxdpx-beamer}% dvipdfmxなので必要
+\usepackage{hyperref} %リンクを有効にする
+\newcommand{\thickhrulefill}{\leavevmode\leaders\hrule depth-1.2pt height 3.2pt\hfill\kern0pt}
+\newcommand{\indicatewidth}[1]{\thickhrulefill{#1}\thickhrulefill}
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}% 既定をゴシック体に
+\usefonttheme{professionalfonts}
+% あとは欧文の場合と同じ
+\usetheme{Copenhagen}
+
+%
+\title{ABC183-F Confluence 解説}
+\author{mine691}
+\date{\today}
+\begin{document}
+\maketitle
+%
+
+\section{問題}
+\begin{frame} % スライド1pごとに frame を作る
+\begin{block}{問題文}
+% ココに問題文を書く
+$ N $ 人の生徒がいる。生徒 $ i $ はクラス $ C_i $ に属している。
+以下の $ Q $ 個のクエリが与えられる。
+\begin{itemize}
+	\item "1 a b" : 生徒 $ a $ を含むグループと、生徒 $ b $ を含むグループをマージする。
+	\item "2 x y" : 生徒 $ x $ を含むグループのうち、クラス $ y $ に属している生徒の数を求める。
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{制約}
+% ココに制約を箇条書きで書く
+
+	\begin{itemize}
+		\item 入力はすべて整数
+		\item $ 1 \leq N \leq 2 \times 10 ^ {5} $
+		\item $ 1 \leq Q \leq 2 \times 10 ^ {5} $
+		\item $ 1 \leq C_i, a, b, x, y \leq N $
+	\end{itemize}
+
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+クエリ 1 は dsu でできそうな見た目をしている。\\
+クラスの情報を std::map で保持することにする。\\
+マージの方法は、マージテク（weighted quick find）を使う。
+\begin{alertblock}{集合をマージする一般的なテク}
+	二つの集合をマージするとき、サイズの小さいほうを大きいほうへマージするようにすると、毎回の操作のならし計算量が $ O (\log N) $ になる。\\
+	これは dsu の Union by size でも使われるテクニックである。 
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}
+マージテクを使うと、
+\begin{itemize}
+	\item クエリ 1 は マージ回数 $ O (\log N) $、std::map / dsu の操作に $ O (\log N) $ 
+	\item クエリ 2 は std::map のアクセスに $ O (\log N) $ 
+\end{itemize}
+まとめると、$ O(N(\log N)^2+Q\log N) $ となる。
+\end{frame}
+
+\begin{frame}{別解1}
+UnionFind で経路圧縮 + マージテクを使うと上手くマージできない？\\
+そんなことはなくて、集合の代表元が親であることを知っていれば、マージ前後に変更を確認すると、 ACL の dsu でもできる。
+\href{https://atcoder.jp/contests/abc183/submissions/18254918}{実装例}
+
+\end{frame}
+
+\begin{frame}{別解2}
+平方分割をする。\\
+生徒 $ a $ が属している集合のサイズが $ \sqrt{N} $ であるかを管理する。\\
+1 クエリはサイズごとで場合分けをする。\\
+2 クエリが $ O(\sqrt{N}) $ でできる。\\
+なお実装は……。
+\end{frame}
+
+\end{document}
